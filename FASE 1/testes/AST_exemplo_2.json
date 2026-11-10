@@ -1,0 +1,72 @@
+{
+  "tipo": "programa",
+  "tela": {
+    "tipo": "tela",
+    "largura": 200,
+    "altura": 160
+  },
+  "comandos": [
+    {
+      "tipo": "grupo",
+      "modificadores": [
+        {
+          "tipo": "rotacao",
+          "angulo": 90
+        },
+        {
+          "tipo": "deslocamento",
+          "dx": 20,
+          "dy": 10
+        }
+      ],
+      "corpo": [
+        {
+          "tipo": "circulo",
+          "cx": 0,
+          "cy": 0,
+          "raio": 15,
+          "estilo": {
+            "preenchimento": "azul"
+          }
+        },
+        {
+          "tipo": "reta",
+          "x1": 0,
+          "y1": 0,
+          "x2": 40,
+          "y2": 0,
+          "estilo": {
+            "traco": "#FF8800",
+            "espessura": 2
+          }
+        }
+      ]
+    },
+    {
+      "tipo": "grupo",
+      "modificadores": [
+        {
+          "tipo": "deslocamento",
+          "dx": 10,
+          "dy": 20
+        },
+        {
+          "tipo": "rotacao",
+          "angulo": 45
+        }
+      ],
+      "corpo": [
+        {
+          "tipo": "retangulo",
+          "x": 0,
+          "y": 0,
+          "largura": 50,
+          "altura": 25,
+          "estilo": {
+            "traco": "verde"
+          }
+        }
+      ]
+    }
+  ]
+}

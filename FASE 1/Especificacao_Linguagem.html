@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="pt-BR" xml:lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Quadro - Especifica����o da Linguagem</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="estilo_pdf.css" />
+</head>
+<body>
+<h1 id="quadro">QUADRO</h1>
+<h2 id="uma-linguagem-para-desenhar--especificação-e-fase-1">Uma
+linguagem para desenhar — especificação e Fase 1</h2>
+<p><strong>Disciplina:</strong> Teoria da Computação e
+Compiladores<br />
+<strong>Produto:</strong> analisador léxico, sintático e geração de
+árvore sintática abstrata (AST)<br />
+<strong>Implementação:</strong> JavaScript com módulos nativos, sem
+bibliotecas de análise</p>
+<blockquote>
+<p>Esta entrega cobre exclusivamente a Fase 1: análise de texto e
+construção de AST. Não desenha figuras nem gera SVG. A estrutura parte
+do tutorial do Robô e aplica a transformação do parser para uma AST,
+conforme os materiais da aula.</p>
+</blockquote>
+<h2 id="1-descrição-da-linguagem">1. Descrição da linguagem</h2>
+<p><strong>Quadro</strong> é uma linguagem textual mínima para
+representar uma tela e uma sequência de elementos geométricos. Todo
+programa deve começar com <code>quadro L A</code>, onde <code>L</code> é
+a largura e <code>A</code> é a altura. Em seguida, aparece pelo menos um
+elemento, que pode ser uma reta, um círculo, um retângulo ou um bloco. O
+bloco permite agrupar elementos e outros blocos em profundidade
+arbitrária.</p>
+<p>Comandos e argumentos têm palavras-chave em minúsculas, sem acentos,
+e são separados por espaços ou quebras de linha. Chaves <code>{</code> e
+<code>}</code> delimitam blocos; o caractere <code>#</code> é reservado
+às cores hexadecimais. Comentários começam com <code>//</code> e
+terminam na quebra de linha. Não existem ponto e vírgula, variáveis,
+laços, caminhos nem expressões.</p>
+<p>A sintaxe <strong>difere da demonstração ilustrativa do
+enunciado</strong>: a declaração é <code>quadro</code>, os grupos são
+<code>bloco { ... }</code>, a forma linear é <code>reta</code> e os
+modificadores são <code>girar</code> e <code>mover</code>.</p>
+<h3 id="11-comandos">1.1 Comandos</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Construção</th>
+<th>Forma textual</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Tela</td>
+<td><code>quadro largura altura</code></td>
+<td>Declara as dimensões obrigatórias do desenho.</td>
+</tr>
+<tr class="even">
+<td>Reta</td>
+<td><code>reta x1 y1 x2 y2</code></td>
+<td>Segmento entre dois pontos.</td>
+</tr>
+<tr class="odd">
+<td>Círculo</td>
+<td><code>circulo cx cy raio</code></td>
+<td>Centro e raio.</td>
+</tr>
+<tr class="even">
+<td>Retângulo</td>
+<td><code>retangulo x y largura altura</code></td>
+<td>Origem, largura e altura.</td>
+</tr>
+<tr class="odd">
+<td>Bloco</td>
+<td><code>bloco [modificadores] { elementos }</code></td>
+<td>Agrupa formas e outros blocos.</td>
+</tr>
+<tr class="even">
+<td>Estilo</td>
+<td><code>traco cor</code>, <code>preencher cor</code>,
+<code>espessura n</code></td>
+<td>Atributos opcionais aplicáveis a formas.</td>
+</tr>
+<tr class="odd">
+<td>Modificador</td>
+<td><code>girar angulo</code>, <code>mover dx dy</code></td>
+<td>Alterações opcionais aplicáveis apenas a blocos.</td>
+</tr>
+</tbody>
+</table>
+<p>Os modificadores <code>girar</code> e <code>mover</code> podem
+aparecer em qualquer ordem, mas no máximo uma vez cada. Sua ordem deve
+ser preservada na AST. Estilos podem aparecer em qualquer ordem; caso um
+atributo se repita, prevalece a última ocorrência daquele atributo.</p>
+<h3 id="12-programa-de-exemplo-a--casa-com-detalhes">1.2 Programa de
+exemplo A — casa com detalhes</h3>
+<pre class="text"><code>quadro 480 320
+// Casa e sol
+retangulo 90 130 210 150 preencher amarelo traco preto espessura 3
+reta 90 130 195 50 traco vermelho espessura 4
+reta 195 50 300 130 traco vermelho espessura 4
+circulo 385 60 32 preencher #FFD700
+bloco mover 118 195 {
+  retangulo 0 0 45 85 preencher roxo
+  bloco girar 30 {
+    reta 10 15 30 15 traco branco espessura 2
+  }
+}</code></pre>
+<p>A declaração define uma tela de 480 por 320. O programa contém quatro
+formas no topo e um bloco deslocado. Dentro dele há um retângulo e outro
+bloco, que contém uma reta. O primeiro bloco demonstra o deslocamento; o
+bloco interno demonstra o aninhamento com rotação.</p>
+<h3 id="13-programa-de-exemplo-b--ordem-dos-modificadores">1.3 Programa
+de exemplo B — ordem dos modificadores</h3>
+<pre class="text"><code>quadro 200 160
+// A ordem dos modificadores importa.
+bloco girar 90 mover 20 10 {
+  circulo 0 0 15 preencher azul
+  reta 0 0 40 0 traco #FF8800 espessura 2
+}
+bloco mover 10 20 girar 45 {
+  retangulo 0 0 50 25 traco verde
+}</code></pre>
+<p>Os dois blocos usam os mesmos tipos de modificadores, mas em ordens
+distintas. Isso é registrado como vetores ordenados na AST, sem
+interpretar as transformações nesta fase.</p>
+<h2 id="2-definição-léxica">2. Definição léxica</h2>
+<p>O analisador lê a entrada da esquerda para a direita. Cada expressão
+regular usa a <strong>flag <code>y</code></strong> (sticky), de modo que
+só reconhece um token na posição atual. Palavras-chave, cores nomeadas e
+números utilizam a condição de término
+<code>(?=$|[\s{}]|&amp;#92;/&amp;#92;/)</code>, para impedir
+reconhecimento de prefixos de palavras maiores. Assim,
+<code>retanguloExtra</code> não é dividido em <code>retangulo</code> +
+<code>Extra</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Token</th>
+<th>Expressão regular JavaScript</th>
+<th>Descrição / tratamento</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>QUADRO</code></td>
+<td><code>/quadro(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Palavra da declaração obrigatória.</td>
+</tr>
+<tr class="even">
+<td><code>RETA</code></td>
+<td><code>/reta(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Palavra-chave de reta.</td>
+</tr>
+<tr class="odd">
+<td><code>CIRCULO</code></td>
+<td><code>/circulo(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Palavra-chave de círculo.</td>
+</tr>
+<tr class="even">
+<td><code>RETANGULO</code></td>
+<td><code>/retangulo(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Palavra-chave de retângulo.</td>
+</tr>
+<tr class="odd">
+<td><code>BLOCO</code></td>
+<td><code>/bloco(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Palavra-chave de agrupamento.</td>
+</tr>
+<tr class="even">
+<td><code>GIRAR</code></td>
+<td><code>/girar(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Modificador de rotação.</td>
+</tr>
+<tr class="odd">
+<td><code>MOVER</code></td>
+<td><code>/mover(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Modificador de deslocamento.</td>
+</tr>
+<tr class="even">
+<td><code>TRACO</code></td>
+<td><code>/traco(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Cor do contorno.</td>
+</tr>
+<tr class="odd">
+<td><code>PREENCHER</code></td>
+<td><code>/preencher(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Cor do preenchimento.</td>
+</tr>
+<tr class="even">
+<td><code>ESPESSURA</code></td>
+<td><code>/espessura(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Espessura do contorno.</td>
+</tr>
+<tr class="odd">
+<td><code>COR_NOME</code></td>
+<td><code>/(?:vermelho|verde|azul|preto|branco|amarelo|roxo)(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Sete cores nomeadas aceitas.</td>
+</tr>
+<tr class="even">
+<td><code>COR_HEX</code></td>
+<td><code>/#[A-Fa-f0-9]{6}(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Cor hexadecimal exatamente <code>#RRGGBB</code>.</td>
+</tr>
+<tr class="odd">
+<td><code>NUM</code></td>
+<td><code>/(?:0|[1-9][0-9]*)(?=$|[\s{}]|\/\/)/y</code></td>
+<td>Inteiro sem sinal, incluindo <code>0</code>; proíbe zeros à
+esquerda.</td>
+</tr>
+<tr class="even">
+<td><code>ABRE</code></td>
+<td><code>/\{/y</code></td>
+<td>Início de bloco.</td>
+</tr>
+<tr class="odd">
+<td><code>FECHA</code></td>
+<td><code>/\}/y</code></td>
+<td>Fim de bloco.</td>
+</tr>
+<tr class="even">
+<td><code>COMENTARIO</code></td>
+<td><code>/&amp;#92;/&amp;#92;/[^\r\n]*/y</code></td>
+<td><strong>Ignorado</strong>; do <code>//</code> até o final da
+linha.</td>
+</tr>
+<tr class="odd">
+<td><code>ESPACO</code></td>
+<td><code>/[ \t\r\n]+/y</code></td>
+<td><strong>Ignorado</strong>; espaços, tabs e quebras de linha.</td>
+</tr>
+</tbody>
+</table>
+<p>Os tokens produzidos para a página têm a estrutura
+<code>{ tipo, lexema, linha }</code>. A contagem inicia na linha 1 e
+considera <code>\n</code>, <code>\r\n</code> ou <code>\r</code> como uma
+quebra. Regras ignoradas não entram no vetor de tokens, mas suas quebras
+de linha continuam contando.</p>
+<p>Se não houver regra aplicável na posição atual, o lexer registra
+<code>{ linha, trecho }</code>, onde <code>trecho</code> inclui toda a
+sequência inválida até o próximo espaço em branco, e prossegue a
+varredura. Na presença de <strong>qualquer erro léxico</strong>, o
+parser não é executado.</p>
+<h2 id="3-definição-sintática--gramática-livre-de-contexto">3. Definição
+sintática — gramática livre de contexto</h2>
+<p>A gramática é <code>G = (V, Σ, P, S)</code>, com símbolo inicial
+<strong><code>S = programa</code></strong>. Os terminais <code>Σ</code>
+são <code>QUADRO</code>, <code>RETA</code>, <code>CIRCULO</code>,
+<code>RETANGULO</code>, <code>BLOCO</code>, <code>GIRAR</code>,
+<code>MOVER</code>, <code>TRACO</code>, <code>PREENCHER</code>,
+<code>ESPESSURA</code>, <code>COR_NOME</code>, <code>COR_HEX</code>,
+<code>NUM</code>, <code>ABRE</code>, <code>FECHA</code> e o marcador
+final lógico <code>FIM</code>. <code>FIM</code> é verificado pelo parser
+quando não restam tokens; ele não é gerado pelo lexer. Os não terminais
+<code>V</code> são todos os símbolos minúsculos à esquerda das produções
+abaixo.</p>
+<pre class="text"><code>programa       -&gt; QUADRO NUM NUM elementos FIM
+
+elementos      -&gt; elemento cauda
+cauda          -&gt; elemento cauda | ε
+
+elemento       -&gt; formaReta | formaCirculo | formaRetangulo | grupo
+formaReta      -&gt; RETA NUM NUM NUM NUM estilos
+formaCirculo   -&gt; CIRCULO NUM NUM NUM estilos
+formaRetangulo -&gt; RETANGULO NUM NUM NUM NUM estilos
+
+grupo          -&gt; BLOCO modificadores ABRE elementos FECHA
+
+modificadores  -&gt; GIRAR NUM aposGirar
+               | MOVER NUM NUM aposMover
+               | ε
+aposGirar      -&gt; MOVER NUM NUM | ε
+aposMover      -&gt; GIRAR NUM | ε
+
+estilos        -&gt; estilo estilos | ε
+estilo         -&gt; TRACO cor | PREENCHER cor | ESPESSURA NUM
+cor            -&gt; COR_NOME | COR_HEX</code></pre>
+<p>A gramática <strong>não tem recursão à esquerda</strong>. O tipo de
+<code>elemento</code>, <code>estilo</code>, <code>cor</code> e a
+primeira alternativa de <code>modificadores</code> pode ser escolhido
+observando apenas o próximo token; portanto, serve à implementação
+descendente recursiva solicitada. Em <code>elementos</code>, o
+<code>FECHA</code> de um bloco ou o fim do programa encerram a lista,
+mas a primeira ocorrência de <code>elemento</code> é obrigatória. Os não
+terminais <code>aposGirar</code> e <code>aposMover</code> impedem
+repetições de modificadores e mantêm a escolha por um token de
+antecipação.</p>
+<h2 id="4-estrutura-da-ast">4. Estrutura da AST</h2>
+<p>A AST contém valores semânticos, e não tokens. O parser devolve uma
+raiz <code>programa</code>, um objeto com as dimensões da tela e um
+vetor <code>comandos</code> que mantém a ordem do texto. Cada forma
+inclui um objeto <code>estilo</code>, possivelmente vazio, que contém
+somente os atributos presentes. Cada bloco inclui um vetor
+<code>modificadores</code> na ordem original e um vetor
+<code>corpo</code> com seus elementos. Números são convertidos com
+<code>Number(...)</code>.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Tipo de nó</th>
+<th>Campos</th>
+<th>Significado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>programa</code></td>
+<td><code>tipo</code>, <code>tela</code>, <code>comandos</code></td>
+<td>Raiz e lista ordenada de elementos.</td>
+</tr>
+<tr class="even">
+<td><code>tela</code></td>
+<td><code>tipo</code>, <code>largura</code>, <code>altura</code></td>
+<td>Dimensões declaradas.</td>
+</tr>
+<tr class="odd">
+<td><code>reta</code></td>
+<td><code>tipo</code>, <code>x1</code>, <code>y1</code>,
+<code>x2</code>, <code>y2</code>, <code>estilo</code></td>
+<td>Dois pontos e atributos opcionais.</td>
+</tr>
+<tr class="even">
+<td><code>circulo</code></td>
+<td><code>tipo</code>, <code>cx</code>, <code>cy</code>,
+<code>raio</code>, <code>estilo</code></td>
+<td>Centro, raio e atributos opcionais.</td>
+</tr>
+<tr class="odd">
+<td><code>retangulo</code></td>
+<td><code>tipo</code>, <code>x</code>, <code>y</code>,
+<code>largura</code>, <code>altura</code>, <code>estilo</code></td>
+<td>Origem, dimensões e atributos opcionais.</td>
+</tr>
+<tr class="even">
+<td><code>grupo</code></td>
+<td><code>tipo</code>, <code>modificadores</code>,
+<code>corpo</code></td>
+<td>Modificadores ordenados e elementos internos.</td>
+</tr>
+<tr class="odd">
+<td><code>rotacao</code></td>
+<td><code>tipo</code>, <code>angulo</code></td>
+<td>Modificador com ângulo.</td>
+</tr>
+<tr class="even">
+<td><code>deslocamento</code></td>
+<td><code>tipo</code>, <code>dx</code>, <code>dy</code></td>
+<td>Modificador com deslocamento horizontal e vertical.</td>
+</tr>
+<tr class="odd">
+<td><em>(objeto de estilo)</em></td>
+<td><code>traco?</code>, <code>preenchimento?</code>,
+<code>espessura?</code></td>
+<td>Somente os atributos fornecidos na forma.</td>
+</tr>
+</tbody>
+</table>
+<p>As chaves <code>{</code> e <code>}</code>, palavras-chave da
+linguagem e objetos de token não aparecem na AST. Não há AST parcial: se
+houver erro léxico ou sintático, só é apresentado o erro. A execução e o
+desenho estão fora desta fase.</p>
+<h3 id="41-ast-completa-do-programa-de-exemplo-b">4.1 AST completa do
+programa de exemplo B</h3>
+<p>A saída abaixo também está no arquivo
+<code>AST_exemplo_2.json</code>:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;programa&quot;</span><span class="fu">,</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;tela&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;tela&quot;</span><span class="fu">,</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;largura&quot;</span><span class="fu">:</span> <span class="dv">200</span><span class="fu">,</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;altura&quot;</span><span class="fu">:</span> <span class="dv">160</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">},</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;comandos&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;grupo&quot;</span><span class="fu">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;modificadores&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;rotacao&quot;</span><span class="fu">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;angulo&quot;</span><span class="fu">:</span> <span class="dv">90</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;deslocamento&quot;</span><span class="fu">,</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;dx&quot;</span><span class="fu">:</span> <span class="dv">20</span><span class="fu">,</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;dy&quot;</span><span class="fu">:</span> <span class="dv">10</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;corpo&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;circulo&quot;</span><span class="fu">,</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;cx&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;cy&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;raio&quot;</span><span class="fu">:</span> <span class="dv">15</span><span class="fu">,</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;estilo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;preenchimento&quot;</span><span class="fu">:</span> <span class="st">&quot;azul&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;reta&quot;</span><span class="fu">,</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;x1&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;y1&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;x2&quot;</span><span class="fu">:</span> <span class="dv">40</span><span class="fu">,</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;y2&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;estilo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;traco&quot;</span><span class="fu">:</span> <span class="st">&quot;#FF8800&quot;</span><span class="fu">,</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;espessura&quot;</span><span class="fu">:</span> <span class="dv">2</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    <span class="fu">{</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;grupo&quot;</span><span class="fu">,</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;modificadores&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;deslocamento&quot;</span><span class="fu">,</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;dx&quot;</span><span class="fu">:</span> <span class="dv">10</span><span class="fu">,</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;dy&quot;</span><span class="fu">:</span> <span class="dv">20</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span><span class="ot">,</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;rotacao&quot;</span><span class="fu">,</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;angulo&quot;</span><span class="fu">:</span> <span class="dv">45</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span><span class="fu">,</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>      <span class="dt">&quot;corpo&quot;</span><span class="fu">:</span> <span class="ot">[</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>        <span class="fu">{</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;tipo&quot;</span><span class="fu">:</span> <span class="st">&quot;retangulo&quot;</span><span class="fu">,</span></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;x&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;y&quot;</span><span class="fu">:</span> <span class="dv">0</span><span class="fu">,</span></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;largura&quot;</span><span class="fu">:</span> <span class="dv">50</span><span class="fu">,</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;altura&quot;</span><span class="fu">:</span> <span class="dv">25</span><span class="fu">,</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>          <span class="dt">&quot;estilo&quot;</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>            <span class="dt">&quot;traco&quot;</span><span class="fu">:</span> <span class="st">&quot;verde&quot;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a>          <span class="fu">}</span></span>
+<span id="cb4-68"><a href="#cb4-68" aria-hidden="true" tabindex="-1"></a>        <span class="fu">}</span></span>
+<span id="cb4-69"><a href="#cb4-69" aria-hidden="true" tabindex="-1"></a>      <span class="ot">]</span></span>
+<span id="cb4-70"><a href="#cb4-70" aria-hidden="true" tabindex="-1"></a>    <span class="fu">}</span></span>
+<span id="cb4-71"><a href="#cb4-71" aria-hidden="true" tabindex="-1"></a>  <span class="ot">]</span></span>
+<span id="cb4-72"><a href="#cb4-72" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
+<h2 id="5-decisões-de-projeto">5. Decisões de projeto</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Questão aberta</th>
+<th>Decisão tomada e consequência</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Sintaxe</td>
+<td><code>quadro</code>, <code>reta</code>, <code>circulo</code>,
+<code>retangulo</code>, <code>bloco</code>; as chaves delimitam grupos.
+Não se usam <code>;</code> nem <code>,</code>.</td>
+</tr>
+<tr class="even">
+<td>Declaração de tela</td>
+<td>É obrigatória, única, no início, com dois números; depois dela deve
+haver ao menos uma forma ou grupo.</td>
+</tr>
+<tr class="odd">
+<td>Números</td>
+<td>Aceita <code>0</code> e inteiros positivos sem sinal, sem zeros à
+esquerda (<code>05</code> é erro léxico). Valores precisam caber como
+inteiros seguros em JavaScript (<code>Number.isSafeInteger</code>).</td>
+</tr>
+<tr class="even">
+<td>Dimensões e coordenadas zero</td>
+<td>Aceitas na Fase 1, inclusive tela ou raio zero, porque validações de
+significado não fazem parte da tarefa.</td>
+</tr>
+<tr class="odd">
+<td>Cores</td>
+<td>Nomes aceitos: <code>vermelho</code>, <code>verde</code>,
+<code>azul</code>, <code>preto</code>, <code>branco</code>,
+<code>amarelo</code> e <code>roxo</code>. Hexadecimal aceita seis
+dígitos e é normalizado para letras maiúsculas na AST.</td>
+</tr>
+<tr class="even">
+<td>Comentários</td>
+<td><code>//</code> até a quebra de linha; nunca entra nos tokens. O
+<code>#</code> fica reservado à cor hexadecimal.</td>
+</tr>
+<tr class="odd">
+<td>Grupos</td>
+<td>Um bloco exige pelo menos um elemento (grupo vazio é erro
+sintático); suporta aninhamentos sucessivos.</td>
+</tr>
+<tr class="even">
+<td>Modificadores</td>
+<td><code>girar</code> exige um número; <code>mover</code> exige dois;
+só podem aparecer depois de <code>bloco</code> e antes de
+<code>{</code>. Cada um aparece no máximo uma vez; as duas ordens são
+aceitas e preservadas em um vetor.</td>
+</tr>
+<tr class="odd">
+<td>Estilos de formas</td>
+<td><code>traco</code>, <code>preencher</code> e <code>espessura</code>
+aparecem apenas depois dos argumentos de formas; cada um é opcional e
+pode ser reordenado.</td>
+</tr>
+<tr class="even">
+<td>Atributos repetidos</td>
+<td>São aceitos; o último valor atribuído ao mesmo atributo prevalece na
+AST. Ex.: <code>preencher azul preencher verde</code> resulta em
+<code>preenchimento: "verde"</code>.</td>
+</tr>
+<tr class="odd">
+<td>Palavras-chave</td>
+<td>Sensíveis a maiúsculas/minúsculas; escritos em minúsculas e sem
+acentos. O lexer verifica limites de palavra, evitando reconhecimento
+parcial.</td>
+</tr>
+<tr class="even">
+<td>Espaçamento</td>
+<td>Espaços, tabulações e quebras de linha funcionam como separadores;
+chaves podem estar coladas a tokens válidos.</td>
+</tr>
+<tr class="odd">
+<td>Erros</td>
+<td>Erros léxicos indicam linha e palavra inteira inválida; erros
+sintáticos interrompem o parser no primeiro erro, indicando linha,
+esperado e encontrado.</td>
+</tr>
+<tr class="even">
+<td>AST</td>
+<td>Sem pontuação, sem tokens e com valores numéricos; aninhamento e
+ordem dos modificadores são mantidos.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="6-arquitetura-da-implementação">6. Arquitetura da
+implementação</h2>
+<ol type="1">
+<li><strong><code>tokens.js</code></strong> define expressões regulares
+com a flag <code>y</code>, inclusive regras ignoradas.</li>
+<li><strong><code>lexer.js</code></strong> caminha pelo texto, registra
+<code>tipo</code>, <code>lexema</code> e <code>linha</code>, e acumula
+erros léxicos.</li>
+<li><strong><code>parser.js</code></strong> usa uma função para cada
+parte da gramática. A função <code>esperar()</code> devolve o token
+consumido; as funções de formas devolvem nós; <code>elementos()</code>
+devolve vetores; a função <code>analisarSintatico()</code> devolve a
+raiz <code>programa</code>.</li>
+<li><strong><code>main.js</code></strong> executa primeiro o léxico. Se
+não houver erros léxicos, tenta o sintático e apresenta a AST em JSON;
+caso contrário, mostra o primeiro erro sintático.</li>
+<li><strong><code>index.html</code></strong> oferece caixa de texto,
+botão de análise e duas saídas: tokens e resultado/erros.</li>
+</ol>
+<p>Essa separação reproduz a progressão da aula: o parser deixa de
+devolver apenas sucesso ou falha e passa a construir valores que formam
+a árvore, de baixo para cima.</p>
+<h2 id="7-casos-de-teste-e-resultados-esperados">7. Casos de teste e
+resultados esperados</h2>
+<table>
+<thead>
+<tr class="header">
+<th>Arquivo</th>
+<th>Esperado</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>testes/validos/01_casa.txt</code></td>
+<td>AST válida: tela 480×320, quatro formas externas, um bloco com um
+retângulo e um bloco interno contendo uma reta.</td>
+</tr>
+<tr class="even">
+<td><code>testes/validos/02_formas_modificadores.txt</code></td>
+<td>AST válida: tela 200×160, dois grupos com modificadores nas ordens
+inversas.</td>
+</tr>
+<tr class="odd">
+<td><code>testes/validos/03_atributos_repetidos.txt</code></td>
+<td>AST válida: último preenchimento <code>verde</code>, último traço
+<code>branco</code> e última espessura <code>2</code>.</td>
+</tr>
+<tr class="even">
+<td><code>testes/validos/04_aninhamento.txt</code></td>
+<td>AST válida: três grupos aninhados, incluindo um bloco sem
+modificadores.</td>
+</tr>
+<tr class="odd">
+<td><code>testes/validos/05_zeros_e_hex.txt</code></td>
+<td>AST válida: aceita zeros, normaliza <code>#00ff88</code> para
+<code>#00FF88</code>.</td>
+</tr>
+<tr class="even">
+<td><code>testes/invalidos/01_erro_lexico.txt</code></td>
+<td>Erro léxico na linha 2, trecho <code>#GG11AA</code>. Não há
+AST.</td>
+</tr>
+<tr class="odd">
+<td><code>testes/invalidos/02_falta_numero.txt</code></td>
+<td>Erro sintático na linha 2: esperado <code>NUM</code>, encontrado
+<code>TRACO</code>. Não há AST.</td>
+</tr>
+<tr class="even">
+<td><code>testes/invalidos/03_grupo_vazio.txt</code></td>
+<td>Erro sintático na linha 3: esperado um elemento, encontrado
+<code>FECHA</code>. Não há AST.</td>
+</tr>
+</tbody>
+</table>
+<p>Há ainda dez testes automatizados adicionais de casos-limite em
+<code>testes/executar-testes.mjs</code>. A execução local retornou
+<strong>18 testes aprovados</strong> (5 válidos + 3 inválidos + 10
+adicionais). A página não tem dependências JavaScript externas e
+funciona com um servidor HTTP local, conforme o
+<code>README.md</code>.</p>
+<h2 id="8-relação-com-os-materiais-da-aula">8. Relação com os materiais
+da aula</h2>
+<p>O projeto respeita as quatro mudanças ensinadas em
+<strong>Aula_AST_Robo.pdf</strong>: <code>esperar()</code> devolve
+token; cada comando devolve nó; uma lista devolve vetor de nós; e a
+análise sintática devolve a raiz da AST. Também preserva a ordem das
+fases e todas as regras exigidas em
+<strong>Atividade_Fase1_Linguagem_de_Desenho.pdf</strong>, incluindo
+erros, gramática LL(1), dados numéricos e ausência de SVG na Fase 1.</p>
+</body>
+</html>

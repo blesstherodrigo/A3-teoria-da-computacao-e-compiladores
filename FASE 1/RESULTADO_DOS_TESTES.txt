@@ -1,0 +1,20 @@
+OK 01 — válido: 01_casa.txt
+OK 02 — válido: 02_formas_modificadores.txt
+OK 03 — válido: 03_atributos_repetidos.txt
+OK 04 — válido: 04_aninhamento.txt
+OK 05 — válido: 05_zeros_e_hex.txt
+OK 06 — inválido: 01_erro_lexico.txt
+OK 07 — inválido: 02_falta_numero.txt
+OK 08 — inválido: 03_grupo_vazio.txt
+OK 09 — extra: zero é aceito
+OK 10 — extra: zero à esquerda é erro léxico
+OK 11 — extra: palavra-chave não casa prefixos
+OK 12 — extra: grupo vazio é erro
+OK 13 — extra: modificador de grupo repetido é erro
+OK 14 — extra: modificador não é aceito em figura
+OK 15 — extra: sem quadro obrigatório é erro
+OK 16 — extra: comentário é ignorado, linha conta
+OK 17 — extra: erro léxico não gera AST
+OK 18 — extra: números não representáveis são rejeitados
+
+18 testes passaram (5 válidos, 3 inválidos e 10 extras).

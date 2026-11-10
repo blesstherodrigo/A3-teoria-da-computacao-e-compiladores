@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Quadro | Analisador léxico, sintático e AST</title>
+  <style>
+    :root { font-family: system-ui, sans-serif; color-scheme: light; }
+    body { max-width: 1120px; margin: auto; padding: 30px 20px; background: #f3f5f9; color: #1b2740; }
+    h1 { margin-bottom: 0; } .sub { color:#5b6782; margin-top:6px; }
+    .panel { background:white; padding:20px; border: 1px solid #d9deea; border-radius:12px; margin-top:20px; }
+    label {display:block; font-weight:600; margin-bottom:10px;}
+    textarea { width:100%; box-sizing:border-box; min-height:270px; padding:13px; border:1px solid #b7c0d4; border-radius:6px; font: 14px/1.55 ui-monospace, monospace; resize:vertical; }
+    button { margin-top:13px; padding:10px 23px; cursor:pointer; background:#243873; color:white; border:0; border-radius:7px; font-size:15px; }
+    .outputs {display:grid; grid-template-columns:1fr 1fr; gap:20px;}
+    pre { overflow:auto; white-space:pre-wrap; overflow-wrap:anywhere; background:#f7f8fb; border:1px solid #e2e5ee; border-radius:6px; padding:13px; min-height:200px; max-height:500px; font:13px/1.5 ui-monospace, monospace; }
+    small {color:#5b6782;} @media(max-width:750px) {.outputs {grid-template-columns:1fr}}
+  </style>
+</head>
+<body>
+  <h1>Quadro</h1>
+  <p class="sub">Fase 1 — linguagem para desenhos: texto → tokens → análise sintática → AST em JSON.</p>
+  <div class="panel">
+    <label for="entrada">Código-fonte</label>
+    <textarea id="entrada" spellcheck="false">quadro 200 160
+// Exemplo de teste
+bloco girar 90 mover 20 10 {
+  circulo 0 0 15 preencher azul
+  reta 0 0 40 0 traco #FF8800 espessura 2
+}</textarea>
+    <button id="analisar" type="button">Analisar código</button>
+    <p><small>Somente análise: esta fase não desenha figuras. Comentários começam com // e grupos usam chaves.</small></p>
+  </div>
+  <div class="outputs">
+    <section class="panel"><h2>Tokens (tipo, lexema, linha)</h2><pre id="tokens" aria-live="polite"></pre></section>
+    <section class="panel"><h2>Resultado: AST ou erros</h2><pre id="resultado" aria-live="polite"></pre></section>
+  </div>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>

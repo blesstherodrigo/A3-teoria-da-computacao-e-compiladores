@@ -1,0 +1,2 @@
+quadro 100 100
+circulo 30 30 10 preencher #GG11AA

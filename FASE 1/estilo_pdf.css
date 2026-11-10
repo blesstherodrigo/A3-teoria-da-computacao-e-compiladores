@@ -1,0 +1,25 @@
+@page {
+ size: A4;
+ margin: 17mm 17mm 17mm 17mm;
+ @top-right { content: 'QUADRO  •  FASE 1'; color: #66718a; font-size: 8.5pt; letter-spacing: 0.7pt; }
+ @bottom-right { content: 'Página ' counter(page); color: #66718a; font-size: 8.5pt; }
+}
+html { font-family: 'DejaVu Sans', Arial, sans-serif; color: #1c2840; font-size: 9.25pt; line-height: 1.49; }
+body { margin:0; }
+h1 { font-size: 25pt; margin: 0 0 0.12em; color: #172854; letter-spacing: .02em; }
+h2 { font-size: 14.5pt; color: #233b74; margin: 1.65em 0 0.7em; border-bottom: 1px solid #cbd5e5; padding-bottom: 3pt; break-after: avoid; }
+h3 { font-size: 10.8pt; color: #253e78; margin: 1.25em 0 .5em; break-after: avoid; }
+p { margin: 0.4em 0 0.85em; text-align: left; }
+blockquote { margin: 10pt 0 13pt; padding: 7pt 12pt; background: #f2f5fa; border-left: 3pt solid #345397; color: #30415d; }
+blockquote p { margin: 0; }
+table { border-collapse: collapse; width: 100%; margin: 8pt 0 13pt; font-size: 8pt; line-height: 1.33; table-layout: fixed; }
+thead { display: table-header-group; }
+th, td { border: 1px solid #d7deeb; padding: 5pt 5.5pt; vertical-align: top; overflow-wrap: anywhere; }
+th { background: #24366f; color: white; font-weight: 700; text-align: left; }
+tr:nth-child(even) td { background: #f8faff; }
+tr { break-inside: avoid; }
+pre { font-family: 'DejaVu Sans Mono', monospace; font-size: 8.2pt; background: #f5f7fb; border: 1px solid #dce3ee; border-radius: 3pt; padding: 8pt 10pt; white-space: pre-wrap; overflow-wrap: anywhere; line-height: 1.4; margin: 5pt 0 12pt; }
+code { font-family: 'DejaVu Sans Mono', monospace; font-size: .9em; overflow-wrap: anywhere; }
+p code, td code { background: #eef2f8; padding: 1pt 2pt; border-radius: 2pt; }
+li { margin: 0.3em 0; }
+strong { font-weight: 700; }

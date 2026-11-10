@@ -1,0 +1,2 @@
+quadro 100 100
+reta 10 10 30 traco azul

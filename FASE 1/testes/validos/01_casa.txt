@@ -1,0 +1,12 @@
+quadro 480 320
+// Casa e sol
+retangulo 90 130 210 150 preencher amarelo traco preto espessura 3
+reta 90 130 195 50 traco vermelho espessura 4
+reta 195 50 300 130 traco vermelho espessura 4
+circulo 385 60 32 preencher #FFD700
+bloco mover 118 195 {
+  retangulo 0 0 45 85 preencher roxo
+  bloco girar 30 {
+    reta 10 15 30 15 traco branco espessura 2
+  }
+}
