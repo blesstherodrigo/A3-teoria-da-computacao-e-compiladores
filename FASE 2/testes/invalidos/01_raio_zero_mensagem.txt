@@ -1,0 +1,3 @@
+quadro 100 100
+// Repeticoes: ultima ocorrencia prevalece.
+circulo 0 0 0 preencher azul preencher verde traco preto traco branco espessura 1 espessura 2

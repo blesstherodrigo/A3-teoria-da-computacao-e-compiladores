@@ -1,0 +1,3 @@
+quadro 0 0
+retangulo 0 0 0 0 traco #00ff88 preencher #A0B1C2 espessura 0
+circulo 10 10 0 preencher vermelho

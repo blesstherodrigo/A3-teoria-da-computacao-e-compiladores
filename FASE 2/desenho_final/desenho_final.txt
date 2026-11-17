@@ -1,0 +1,58 @@
+quadro 400 400
+// Desenho final: Robo acenando
+
+// Antena e topo da cabeca
+reta 200 35 200 65 traco preto espessura 3
+circulo 200 28 8 preencher vermelho
+
+// Cabeca (bloco deslocado com olhos e boca em coordenadas locais)
+bloco mover 150 65 {
+  retangulo 0 0 100 75 preencher #CBD5E1 traco preto espessura 3
+  circulo 28 30 10 preencher branco traco preto espessura 2
+  circulo 28 30 4 preencher azul
+  circulo 72 30 10 preencher branco traco preto espessura 2
+  circulo 72 30 4 preencher azul
+  reta 30 56 70 56 traco preto espessura 3
+}
+
+// Pescoco e tronco
+retangulo 185 140 30 15 preencher #64748B traco preto espessura 2
+bloco mover 135 155 {
+  retangulo 0 0 130 120 preencher azul traco preto espessura 3
+  retangulo 25 25 80 45 preencher #1E293B traco branco espessura 2
+  circulo 45 47 8 preencher amarelo
+  circulo 85 47 8 preencher verde
+  reta 30 92 100 92 traco branco espessura 2
+}
+
+// Braco esquerdo (abaixado)
+bloco mover 105 165 {
+  retangulo 0 0 25 85 preencher #CBD5E1 traco preto espessura 3
+  circulo 12 95 12 preencher vermelho traco preto espessura 2
+}
+
+// Braco direito articulado (grupos aninhados com mover e girar)
+bloco mover 270 175 {
+  bloco girar 315 {
+    retangulo 0 0 65 22 preencher #CBD5E1 traco preto espessura 3
+    bloco mover 65 11 girar 310 {
+      retangulo 0 0 55 18 preencher #CBD5E1 traco preto espessura 3
+      circulo 62 9 11 preencher vermelho traco preto espessura 2
+    }
+  }
+}
+
+// Pernas e pes (grupos aninhados)
+bloco mover 155 275 {
+  retangulo 0 0 28 70 preencher #334155 traco preto espessura 3
+  bloco mover 0 70 {
+    retangulo 0 0 38 18 preencher preto
+  }
+}
+
+bloco mover 217 275 {
+  retangulo 0 0 28 70 preencher #334155 traco preto espessura 3
+  bloco mover 0 70 {
+    retangulo 0 0 38 18 preencher preto
+  }
+}

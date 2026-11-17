@@ -1,0 +1,9 @@
+quadro 200 160
+// A ordem dos modificadores importa.
+bloco girar 90 mover 20 10 {
+  circulo 0 0 15 preencher azul
+  reta 0 0 40 0 traco #FF8800 espessura 2
+}
+bloco mover 10 20 girar 45 {
+  retangulo 0 0 50 25 traco verde
+}
